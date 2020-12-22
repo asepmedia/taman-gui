@@ -5,4 +5,12 @@ public class Melati extends Plant {
     public String getJenis() {
         return "Melati";
     }
+
+    @Override
+    public String getImagePath() {
+        if(this.statusTumbuh == 5) {
+            return "img/jasmine.png";
+        }
+        return super.getImagePath();
+    }
 }

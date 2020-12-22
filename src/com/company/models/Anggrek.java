@@ -5,4 +5,12 @@ public class Anggrek extends Plant {
     public String getJenis() {
         return "Anggrek";
     }
+
+    @Override
+    public String getImagePath() {
+        if(this.statusTumbuh == 5) {
+            return "img/orchid.png";
+        }
+        return super.getImagePath();
+    }
 }

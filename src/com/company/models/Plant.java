@@ -15,6 +15,13 @@ public class Plant{
         jumlahAir = 0;
         jumlahPupuk = 0;
     }
+
+    public void panen() {
+        statusTumbuh = 0;
+        jumlahAir = 0;
+        jumlahPupuk = 0;
+    }
+
     public void beriAir()
     {
         jumlahAir++;
@@ -36,7 +43,7 @@ public class Plant{
     }
     public void tumbuh()
     {
-        if(statusTumbuh <4)
+        if(statusTumbuh <5)
         {
             jumlahAir = jumlahAir - 3;
             jumlahPupuk = jumlahPupuk - 1;
@@ -69,21 +76,24 @@ public class Plant{
     }
     public String getImagePath()
     {
-        String tImagePath = "img/seed.png";
+        String tImagePath = "img/soil.png";
         switch(statusTumbuh) {
             case 0:
-                tImagePath = "img/seed.png";
+                tImagePath = "img/soil.png";
                 break;
             case 1:
-                tImagePath = "img/sprout.png";
+                tImagePath = "img/seed.png";
                 break;
             case 2:
-                tImagePath = "img/small.png";
+                tImagePath = "img/sprout.png";
                 break;
             case 3:
-                tImagePath = "img/big.png";
+                tImagePath = "img/small.png";
                 break;
             case 4:
+                tImagePath = "img/big.png";
+                break;
+            case 5:
                 tImagePath = "img/blossom.png";
                 break;
         }

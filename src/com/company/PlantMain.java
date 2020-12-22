@@ -26,6 +26,7 @@ public class PlantMain {
 
     JPanel panel = new JPanel();
     JSplitPane splitPane = new JSplitPane();
+    private int totalPoint = 0;
 
 
     public PlantMain() {
@@ -74,13 +75,12 @@ public class PlantMain {
             panelDetail.setPreferredSize(new Dimension(400, 100));
             panelDetail.add(btnBeriAir);
             panelDetail.add(btnBeriPupuk);
-//            panelDetail.add(btnPanen);
+            panelDetail.add(btnPanen);
             panelDetail.repaint();
             label.add(panelDetail);
             panel.repaint();
 
             btnBeriAir.addActionListener(new ActionListener() {
-                int passed = 0;
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Beri Air");
@@ -104,6 +104,26 @@ public class PlantMain {
                     splitPane.repaint();
                     labelIcon.setIcon(createImageIcon(selectedPlant.getImagePath(), ""));
                     labelIcon.repaint();
+                }
+            });
+
+            btnPanen.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(selectedPlant.getStatusTumbuh() < 5) {
+                        JOptionPane.showMessageDialog(jFrame, "Tanaman belum dapat dipanen.");
+                        return;
+                    }
+
+                    selectedPlant.panen();
+                    labelJumlahAir.setText("Air : " + selectedPlant.getJumlahAir());
+                    labelJumlahPupuk.setText("Pupuk : " + selectedPlant.getJumlahPupuk());
+                    labelStatus.setText("Status : " + selectedPlant.getStatusTumbuhText());
+                    splitPane.repaint();
+                    labelIcon.setIcon(createImageIcon(selectedPlant.getImagePath(), ""));
+                    labelIcon.repaint();
+                    totalPoint += 100;
+                    JOptionPane.showMessageDialog(jFrame, "Tanaman sudah panen, total point Anda " + totalPoint);
                 }
             });
         });

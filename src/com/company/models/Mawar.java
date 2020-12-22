@@ -5,4 +5,12 @@ public class Mawar extends Plant {
     public String getJenis() {
         return "Mawar";
     }
+
+    @Override
+    public String getImagePath() {
+        if(this.statusTumbuh == 5) {
+            return "img/roses.png";
+        }
+        return super.getImagePath();
+    }
 }
