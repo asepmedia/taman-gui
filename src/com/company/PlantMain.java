@@ -4,19 +4,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import com.company.adapter.PlantAdapter;
-import com.company.models.Anggrek;
-import com.company.models.Mawar;
-import com.company.models.Melati;
-import com.company.models.Plant;
+import com.company.models.*;
 
 public class PlantMain {
     JFrame jFrame = new JFrame("Latihan");
     JList<Plant> plants = new JList<>();
     DefaultListModel<Plant> model = new DefaultListModel<>();
     Plant selectedPlant;
+    Koneksi koneksi = new Koneksi();
+    DataPoint point = new DataPoint();
 
     JLabel label = new JLabel();
     JLabel labelIcon = new JLabel();
@@ -32,9 +32,36 @@ public class PlantMain {
     public PlantMain() {
         try {
             ArrayList<Plant> listPlant = new ArrayList<>();
-            listPlant.add(new Mawar());
-            listPlant.add(new Anggrek());
-            listPlant.add(new Melati());
+//            listPlant.add(new Mawar());
+//            listPlant.add(new Anggrek());
+//            listPlant.add(new Melati());
+
+            String queryGetTanaman = "SELECT * FROM tanaman";
+            ResultSet rs = koneksi.stm.executeQuery(queryGetTanaman);
+
+            while(rs.next()) {
+                System.out.println("Nama Tanaman : " + rs.getString("nama"));
+                switch (rs.getString("jenis")) {
+                    case "mawar":
+                        listPlant.add(new Mawar()
+                                .setId(rs.getInt("id"))
+                                .setStatusTumbuh(rs.getInt("status")));
+                        break;
+                    case "melati":
+                        listPlant.add(new Melati()
+                                .setId(rs.getInt("id"))
+                                .setStatusTumbuh(rs.getInt("status")));
+                        break;
+                    case "anggrek":
+                        listPlant.add(new Anggrek()
+                                .setId(rs.getInt("id"))
+                                .setStatusTumbuh(rs.getInt("status")));
+                        break;
+                }
+            }
+
+            koneksi.stm.close();
+            koneksi.con.close();
 
             listPlant.forEach(p -> {
                 model.addElement(p);
@@ -52,6 +79,7 @@ public class PlantMain {
             JButton btnBeriAir = new JButton("Beri Air");
             JButton btnBeriPupuk = new JButton("Beri Pupuk");
             JButton btnPanen = new JButton("Panen");
+            JButton btnCekPoint = new JButton("Cek Poin");
 
             //set label
             labelJumlahAir.setText("Air : " + selectedPlant.getJumlahAir());
@@ -76,9 +104,17 @@ public class PlantMain {
             panelDetail.add(btnBeriAir);
             panelDetail.add(btnBeriPupuk);
             panelDetail.add(btnPanen);
+            panelDetail.add(btnCekPoint);
             panelDetail.repaint();
             label.add(panelDetail);
             panel.repaint();
+
+            btnCekPoint.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JOptionPane.showMessageDialog(jFrame, "Total Poin Anda : " + point.getPoin());
+                }
+            });
 
             btnBeriAir.addActionListener(new ActionListener() {
                 @Override
@@ -123,7 +159,8 @@ public class PlantMain {
                     labelIcon.setIcon(createImageIcon(selectedPlant.getImagePath(), ""));
                     labelIcon.repaint();
                     totalPoint += 100;
-                    JOptionPane.showMessageDialog(jFrame, "Tanaman sudah panen, total point Anda " + totalPoint);
+                    point.updatePoint(100);
+                    JOptionPane.showMessageDialog(jFrame, "Tanaman sudah panen, point Anda " + point.getPoin());
                 }
             });
         });

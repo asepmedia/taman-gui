@@ -1,13 +1,17 @@
 package com.company.models;
 
+import com.company.Koneksi;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class Plant{
+    int id;
     int statusTumbuh;//0-4
     int jumlahAir;
     int jumlahPupuk;
     String jenis;
+    Koneksi koneksi = new Koneksi();
 
     public Plant()
     {
@@ -20,6 +24,20 @@ public class Plant{
         statusTumbuh = 0;
         jumlahAir = 0;
         jumlahPupuk = 0;
+
+        updateStatusTumbuById(id, 0);
+    }
+
+    public void updateStatusTumbuById(int id, int status) {
+        try {
+            String updateStatusTumbuh = "UPDATE tanaman SET status = %s WHERE id = %s";
+            updateStatusTumbuh = String.format(updateStatusTumbuh, status, id);
+
+            koneksi.stm.execute(updateStatusTumbuh);
+            System.out.println("Mengupdate status tumbuh ID " + id + " menjadi : " + status);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void beriAir()
@@ -48,6 +66,8 @@ public class Plant{
             jumlahAir = jumlahAir - 3;
             jumlahPupuk = jumlahPupuk - 1;
             statusTumbuh++;
+
+            updateStatusTumbuById(id, statusTumbuh);
         }
     }
     public void displayPlant()
@@ -124,5 +144,15 @@ public class Plant{
 
     public String getJenis() {
         return jenis;
+    }
+
+    public Plant setId(int id) {
+        this.id = id;
+        return this;
+    }
+
+    public Plant setStatusTumbuh(int statusTumbuh) {
+        this.statusTumbuh = statusTumbuh;
+        return this;
     }
 }
